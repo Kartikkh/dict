@@ -1,0 +1,31 @@
+{
+  "name": "dict",
+  "version": "1.0.0",
+  "description": "Command Line Dictionary Tool that uses Wordnik API",
+  "main": "dict.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shankarsiddharth/dict.git"
+  },
+  "keywords": [
+    "command",
+    "cli",
+    "dictionary",
+    "wordnik",
+    "api",
+    "tool"
+  ],
+  "author": "Shankar Siddharth K A",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/shankarsiddharth/dict/issues"
+  },
+  "homepage": "https://github.com/shankarsiddharth/dict#readme",
+  "preferGlobal": true,
+  "bin": {
+    "dict": "dict.js"
+  }
+}

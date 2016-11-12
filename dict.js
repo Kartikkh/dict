@@ -5,7 +5,9 @@ const http = require('http');
 const args = process.argv;
 const userargs = args.slice(2);
 const userargslength = userargs.length;
-const baseapi = 'http://api.wordnik.com:80/v4/word.json/'
+const baseapi = 'http://api.wordnik.com:80/v4/';
+const wordapi = baseapi + 'word.json/';
+const wordsapi = baseapi + 'words.json/';
 const api_key = 'a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5';
 
 let wordnik = (url, callback) => {
@@ -29,7 +31,7 @@ let wordnik = (url, callback) => {
 let definitions = (word) => {
   let url = '';
   api = word+'/definitions?api_key='+api_key;
-  url = baseapi + api;
+  url = wordapi + api;
   wordnik(url, (data) => {
     if(data.length >= 1){
     console.log('The definitions for the word "'+word+'":');
@@ -45,7 +47,7 @@ let definitions = (word) => {
 let synonyms = (word) => {
   let url = '';
   api = word+'/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=2000&api_key='+api_key;
-  url = baseapi + api;
+  url = wordapi + api;
   wordnik(url, (data) => {
     if(data.length >= 1){
     let words = data[0].words;
@@ -62,7 +64,7 @@ let synonyms = (word) => {
 let antonyms = (word) => {
   let url = '';
   api = word+'/relatedWords?relationshipTypes=antonym&limitPerRelationshipType=2000&api_key='+api_key;
-  url = baseapi + api;
+  url = wordapi + api;
   wordnik(url, (data) => {
     if(data.length >= 1){
     let words = data[0].words;
@@ -83,7 +85,7 @@ let isEmpty = (obj) => {
 let examples = (word) => {
   let url = '';
   api = word+'/examples?api_key='+api_key;
-  url = baseapi + api;
+  url = wordapi + api;
   wordnik(url, (data) => {
     if(!isEmpty(data)){
     let example_sentences = data.examples;

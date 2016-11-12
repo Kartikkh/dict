@@ -31,10 +31,14 @@ let definitions = (word) => {
   api = word+'/definitions?api_key='+api_key;
   url = baseapi + api;
   wordnik(url, (data) => {
+    if(data.length >= 1){
     console.log('The definitions for the word "'+word+'":');
     for(let index in data){
       console.log((parseInt(data[index].sequence)+1) + '\t' + data[index].partOfSpeech + '\t' + data[index].text);
     }
+  }else{
+    console.log('No definitions found for the word "'+word+'"');
+  }
   });
 };
 
@@ -43,11 +47,15 @@ let synonyms = (word) => {
   api = word+'/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=2000&api_key='+api_key;
   url = baseapi + api;
   wordnik(url, (data) => {
+    if(data.length >= 1){
     let words = data[0].words;
     console.log('The synonyms for the word "'+word+'":');
     for(let index in words){
       console.log((parseInt(index)+1) + '\t' +words[index]);
     }
+  }else{
+    console.log('No synonyms found for the word "'+word+'"');
+  }
   });
 };
 
@@ -56,24 +64,36 @@ let antonyms = (word) => {
   api = word+'/relatedWords?relationshipTypes=antonym&limitPerRelationshipType=2000&api_key='+api_key;
   url = baseapi + api;
   wordnik(url, (data) => {
+    if(data.length >= 1){
     let words = data[0].words;
     console.log('The antonyms for the word "'+word+'":');
     for(let index in words){
       console.log((parseInt(index)+1) + '\t' +words[index]);
     }
+  }else{
+    console.log('No antonyms found for the word "'+word+'"');
+  }
   });
 }
+
+let isEmpty = (obj) => {
+    return Object.keys(obj).length === 0;
+};
 
 let examples = (word) => {
   let url = '';
   api = word+'/examples?api_key='+api_key;
   url = baseapi + api;
   wordnik(url, (data) => {
+    if(!isEmpty(data)){
     let example_sentences = data.examples;
     console.log('Example usages for the word "'+word+'":');
     for(let index in example_sentences){
       console.log((parseInt(index)+1) +'\t'+ example_sentences[index].text);
     }
+  }else{
+    console.log('No examples found for the word "'+word+'"');
+  }
   });
 }
 

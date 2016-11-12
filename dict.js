@@ -121,10 +121,8 @@ let wordOftheDay = (callback) => {
 
 console.log('User args is : ' + userargs);
 if(userargslength == 0){
-  //TODO: Word of the day full dict - def, syn, ant, ex
-  console.log('No user arguments provided');
-  console.log("User didn't give any options, will display dictionary for the word of the day");
   wordOftheDay((data) => {
+    console.log('Word of the Day - Dictionary:');
     dictionary(data.word);
   });
 }else if(userargslength == 1){

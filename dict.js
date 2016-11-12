@@ -26,6 +26,57 @@ let wordnik = (url, callback) => {
   });
 };
 
+let definitions = (word) => {
+  let url = '';
+  api = word+'/definitions?api_key='+api_key;
+  url = baseapi + api;
+  wordnik(url, (data) => {
+    console.log('The definitions for the word "'+word+'":');
+    for(let index in data){
+      console.log((parseInt(data[index].sequence)+1) + '\t' + data[index].partOfSpeech + '\t' + data[index].text);
+    }
+  });
+};
+
+let synonyms = (word) => {
+  let url = '';
+  api = word+'/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=2000&api_key='+api_key;
+  url = baseapi + api;
+  wordnik(url, (data) => {
+    let words = data[0].words;
+    console.log('The synonyms for the word "'+word+'":');
+    for(let index in words){
+      console.log((parseInt(index)+1) + '\t' +words[index]);
+    }
+  });
+};
+
+let antonyms = (word) => {
+  let url = '';
+  api = word+'/relatedWords?relationshipTypes=antonym&limitPerRelationshipType=2000&api_key='+api_key;
+  url = baseapi + api;
+  wordnik(url, (data) => {
+    let words = data[0].words;
+    console.log('The antonyms for the word "'+word+'":');
+    for(let index in words){
+      console.log((parseInt(index)+1) + '\t' +words[index]);
+    }
+  });
+}
+
+let examples = (word) => {
+  let url = '';
+  api = word+'/examples?api_key='+api_key;
+  url = baseapi + api;
+  wordnik(url, (data) => {
+    let example_sentences = data.examples;
+    console.log('Example usages for the word "'+word+'":');
+    for(let index in example_sentences){
+      console.log((parseInt(index)+1) +'\t'+ example_sentences[index].text);
+    }
+  });
+}
+
 console.log('User args is : ' + userargs);
 if(userargslength == 0){
   //TODO: Word of the day full dict - def, syn, ant, ex
@@ -33,70 +84,42 @@ if(userargslength == 0){
   console.log("User didn't give any options, will display dictionary for the word of the day");
 }else if(userargslength == 1){
   //TODO: Given Word's full dict - def, syn, ant, ex
-  console.log('Display the given words full dict');
+  let word = userargs[0];
+  console.log('The dictionary for the word "'+word+'":');
+  definitions(word);
+  synonyms(word);
+  antonyms(word);
+  examples(word);
+  //console.log('Display the given words full dict');
 }else if(userargslength == 2){
   let word = userargs[1];
-  let url;
+  let url = '';
   switch(userargs[0]) {
       case 'def':
-        //TODO: definition of the given word
-        console.log('The current args is : ' + args);
-        api = word+'/definitions?api_key='+api_key;
-        url = baseapi + api;
-        wordnik(url, (data) => {
-          for(let index in data){
-            console.log((parseInt(data[index].sequence)+1) + '\t' + data[index].partOfSpeech + '\t' + data[index].text);
-          }
-          //console.log(data);
-        });
+        definitions(word);
         break;
       case 'syn':
-        //TODO: sysnonyms of the given word
-        console.log('The current args is : ' + args);
-        api = word+'/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=2000&api_key='+api_key;
-        url = baseapi + api;
-        wordnik(url, (data) => {
-          let words = data[0].words;
-          for(let index in words){
-            console.log((parseInt(index)+1) + '\t' +words[index]);
-          }
-          //console.log(data[0].words);
-        });
+        synonyms(word);
         break;
       case 'ant':
-        //TODO: antonyms of the given word
-        console.log('The current args is : ' + args);
-        api = word+'/relatedWords?relationshipTypes=antonym&limitPerRelationshipType=2000&api_key='+api_key;
-        url = baseapi + api;
-        wordnik(url, (data) => {
-          let words = data[0].words;
-          for(let index in words){
-            console.log((parseInt(index)+1) + '\t' +words[index]);
-          }
-          //console.log(data.words);
-        });
+        antonyms(word);
         break;
       case 'ex':
-        //TODO: examples of the given word
-        console.log('The current args is : ' + args);
-        api = word+'/topExample?api_key='+api_key;
-        url = baseapi + api;
-        wordnik(url, (data) => {
-          console.log('Example usage for the word "'+word+'":');
-          console.log('\t'+ data.text);
-        });
+        examples(word);
         break;
       case 'dict':
-        //TODO: Given Word full dict - def, syn, ant, ex
-        console.log('The current args is : ' + args);
+        console.log('The dictionary for the word "'+word+'":');
+        definitions(word);
+        synonyms(word);
+        antonyms(word);
+        examples(word);
         break;
       case 'play':
         //TODO: word game logic
         console.log('The current args is : ' + args);
         break;
       default:
-        //TODO: Given Word full dict - def, syn, ant, ex
-        console.log('Display the given words full dict');
+        //TODO: Display help / error message
   }
 }else{
   //TODO: display help / error message

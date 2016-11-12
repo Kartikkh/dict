@@ -97,20 +97,22 @@ let examples = (word) => {
   });
 }
 
+let dictionary = (word) => {
+  definitions(word);
+  synonyms(word);
+  antonyms(word);
+  examples(word);
+};
+
 console.log('User args is : ' + userargs);
 if(userargslength == 0){
   //TODO: Word of the day full dict - def, syn, ant, ex
   console.log('No user arguments provided');
   console.log("User didn't give any options, will display dictionary for the word of the day");
 }else if(userargslength == 1){
-  //TODO: Given Word's full dict - def, syn, ant, ex
   let word = userargs[0];
   console.log('The dictionary for the word "'+word+'":');
-  definitions(word);
-  synonyms(word);
-  antonyms(word);
-  examples(word);
-  //console.log('Display the given words full dict');
+  dictionary(word);
 }else if(userargslength == 2){
   let word = userargs[1];
   let url = '';
@@ -129,10 +131,7 @@ if(userargslength == 0){
         break;
       case 'dict':
         console.log('The dictionary for the word "'+word+'":');
-        definitions(word);
-        synonyms(word);
-        antonyms(word);
-        examples(word);
+        dictionary(word);
         break;
       case 'play':
         //TODO: word game logic

@@ -8,12 +8,12 @@ Command Line Dictionary Tool that uses Wordnik API
     npm link
     ```
 3. The possible commands are,
-    * *dict def <word>*
-    * *dict syn <word>*
-    * *dict ant <word>*
-    * *dict ex <word>*
-    * *dict dict <word>*
-    * *dict <word>*
+    * *dict def ```<word>```*
+    * *dict syn ```<word>```*
+    * *dict ant ```<word>```*
+    * *dict ex ```<word>```*
+    * *dict dict ```<word>```*
+    * *dict ```<word>```*
     * *dict play*
     * *dict*
     * *dict help*

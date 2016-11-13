@@ -67,49 +67,61 @@ let examples = (word) => {
   wordnik(url, (data) => {
     if(!isEmpty(data)){
       let example_sentences = data.examples;
-      console.log('Example usages for the word "'+word+'":');
+      console.log('\x1b[93m Example usages for the word "'+word+'": \x1b[0m');
       for(let index in example_sentences){
         console.log((parseInt(index)+1) +'\t'+ example_sentences[index].text);
       }
     }else{
-      console.log('No examples found for the word "'+word+'"');
+      console.log('\x1b[31m No examples found for the word "'+word+'" \x1b[0m');
     }
   });
 }
 
-let dictionary = (word) => {
+let printDefinitions = (word) => {
   definitions(word, (data) => {
     if(data.length >= 1){
-      console.log('The definitions for the word "'+word+'":');
+      console.log('\x1b[93m The definitions for the word "'+word+'": \x1b[0m');
       for(let index in data){
         console.log((parseInt(index)+1) + '\t' + data[index].partOfSpeech + '\t' + data[index].text);
       }
     }else{
-      console.log('No definitions found for the word "'+word+'"');
+      console.log('\x1b[31m No definitions found for the word "'+word+'" \x1b[0m');
     }
   });
+};
+
+let printSynonyms = (word) => {
   synonyms(word, (data) => {
     if(data.length >= 1){
       let words = data[0].words;
-      console.log('The synonyms for the word "'+word+'":');
+      console.log('\x1b[93m The synonyms for the word "'+word+'": \x1b[0m');
       for(let index in words){
         console.log((parseInt(index)+1) + '\t' +words[index]);
       }
     }else{
-      console.log('No synonyms found for the word "'+word+'"');
+      console.log('\x1b[31m No synonyms found for the word "'+word+'" \x1b[0m');
     }
   });
+};
+
+let printAntonyms = (word) => {
   antonyms(word, (data) => {
     if(data.length >= 1){
       let words = data[0].words;
-      console.log('The antonyms for the word "'+word+'":');
+      console.log('\x1b[93m The antonyms for the word "'+word+'": \x1b[0m');
       for(let index in words){
         console.log((parseInt(index)+1) + '\t' +words[index]);
       }
     }else{
-      console.log('No antonyms found for the word "'+word+'"');
+      console.log('\x1b[31m No antonyms found for the word "'+word+'" \x1b[0m');
     }
   });
+};
+
+let dictionary = (word) => {
+  printDefinitions(word);
+  printSynonyms(word);
+  printAntonyms(word);
   examples(word);
 };
 
@@ -121,7 +133,7 @@ let wordOftheDay = (callback) => {
     if(!isEmpty(data)){
       callback(data);
     }else{
-      console.log('Sorry, unable to fetch the word of the day');
+      console.log('\x1b[31m Sorry, unable to fetch the word of the day \x1b[0m');
     }
   });
 };
@@ -134,7 +146,7 @@ let randomWord = (callback) => {
     if(!isEmpty(data)){
       callback(data);
     }else{
-      console.log('Sorry, unable to fetch the word of the day');
+      console.log('\x1b[31m Sorry, unable to fetch the word of the day \x1b[0m');
     }
   });
 };
@@ -161,7 +173,7 @@ let playgame = () => {
 
 if(userargslength == 0){
   wordOftheDay((data) => {
-    console.log('Word of the Day - Dictionary:');
+    console.log('\x1b[93m Word of the Day - Dictionary: \x1b[0m');
     dictionary(data.word);
   });
 }else if(userargslength == 1){
@@ -170,11 +182,10 @@ if(userargslength == 0){
     case 'play':
       //TODO: word game logic
       console.log('The current args is : ' + args);
-      isGame = true;
       playgame();
       break;
     default:
-      console.log('The dictionary for the word "'+word+'":');
+      console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
       dictionary(word);
   }
 }else if(userargslength == 2){
@@ -182,48 +193,19 @@ if(userargslength == 0){
   let url = '';
   switch(userargs[0]) {
       case 'def':
-        definitions(word, (data) => {
-          if(data.length >= 1){
-            console.log('The definitions for the word "'+word+'":');
-            for(let index in data){
-              console.log((parseInt(index)+1) + '\t' + data[index].partOfSpeech + '\t' + data[index].text);
-            }
-          }else{
-            console.log('No definitions found for the word "'+word+'"');
-          }
-        });
+        printDefinitions(word);
         break;
       case 'syn':
-        synonyms(word, (data) => {
-          if(data.length >= 1){
-            let words = data[0].words;
-            console.log('The synonyms for the word "'+word+'":');
-            for(let index in words){
-              console.log((parseInt(index)+1) + '\t' +words[index]);
-            }
-          }else{
-            console.log('No synonyms found for the word "'+word+'"');
-          }
-        });
+        printSynonyms(word);
         break;
       case 'ant':
-        antonyms(word, (data) => {
-          if(data.length >= 1){
-            let words = data[0].words;
-            console.log('The antonyms for the word "'+word+'":');
-            for(let index in words){
-              console.log((parseInt(index)+1) + '\t' +words[index]);
-            }
-          }else{
-            console.log('No antonyms found for the word "'+word+'"');
-          }
-        });
+        printAntonyms(word);
         break;
       case 'ex':
         examples(word);
         break;
       case 'dict':
-        console.log('The dictionary for the word "'+word+'":');
+        console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
         dictionary(word);
         break;
       default:

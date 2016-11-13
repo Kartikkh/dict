@@ -243,6 +243,19 @@ let playgame = () => {
   });
 };
 
+let printHelp = () => {
+  console.log('The possible commands are:');
+  console.log('\t1.dict def <word>');
+  console.log('\t2.dict syn <word>');
+  console.log('\t3.dict ant <word>');
+  console.log('\t4.dict ex <word>');
+  console.log('\t5.dict dict <word>');
+  console.log('\t6.dict <word>');
+  console.log('\t7.dict play');
+  console.log('\t8.dict');
+  console.log('\t9.dict help');
+};
+
 let startDictionary = () => {
   if(userargslength == 0){
     wordOftheDay((data) => {
@@ -254,6 +267,9 @@ let startDictionary = () => {
     switch(word){
       case 'play':
         playgame();
+        break;
+        case 'help':
+        printHelp();
         break;
       default:
         console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
@@ -280,11 +296,12 @@ let startDictionary = () => {
           dictionary(word);
           break;
         default:
-          //TODO: Display help / error message
+          printHelp();
     }
   }else{
-    //TODO: display help / error message
+    printHelp();
   }
 };
 
 startDictionary();
+console.log('Type "dict help" for help.');

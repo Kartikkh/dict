@@ -151,23 +151,73 @@ let randomWord = (callback) => {
   });
 };
 
+let printGameRetryText = () => {
+  console.log('You have entered incorrect word.');
+  console.log('Choose the options from below menu:');
+  console.log('\t1. Try Again');
+  console.log('\t2. Hint');
+  console.log('\t3. Quit');
+};
+
 let playgame = () => {
   let game_word;
+  let game_word_definitions = new Array();
   randomWord((data) => {
     console.log('Random Word is: ' + data.word);
-    game_word = data.word;
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
+    game_word = data.word.replace(" ", "%20");
+    console.log('Game Word: ' + game_word);
+    definitions(game_word, (data) => {
+      if(data.length >= 1){
+        for(let index in data){
+          game_word_definitions[(parseInt(index)+1)] =  data[index].text;
+        }
+        console.log('Length of definition array : ' + game_word_definitions.length);
+      }else{
+        console.log('\x1b[31m Error occured in the process.\nProcess will exit now. \x1b[0m');
+        process.exit();
+      }
+
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      console.log('Press "Ctrl + C" to exit the program.');
+      console.log('Find the word with the following definition');
+      console.log('Definition :\n\t'+game_word_definitions[1]);
+      console.log('Type the word and press the ENTER key.');
+      rl.on('line', (input) => {
+        if(`${input}` === game_word){
+          console.log('Congratulations! You have entered correct word.');
+          rl.close();
+        }else{
+          if(`${input}` == '3'){
+            rl.close();
+          }
+          if(!(`${input}` == '1' || `${input}` == '2' || `${input}` == '3')){
+            printGameRetryText();
+          }
+          switch(parseInt(`${input}`)){
+            case 1:
+              console.log('Please try to guess the word again:');
+            break;
+            case 2:
+              let randomNumber = Math.floor((Math.random() * parseInt(game_word_definitions.length)) + 1);
+              console.log('Hint:');
+              console.log('\tDefinition :\t' + game_word_definitions[randomNumber]);
+              console.log('\nTry to guess the word again using the hint provided.');
+              console.log('Enter the word:');
+            break;
+            case 3:
+              console.log('The correct word is : ' + game_word);
+              console.log('Thank you for trying out this game. \nGame Ended.');
+              rl.close();
+            break;
+            default:
+          }
+        }
+      });
+
     });
-    //console.log('Find the word with the following definition and synonym.');
-    //console.log('Type the word and press ENTER.');
-    console.log('Press ctrl + C to exit.');
-    rl.on('line', (input) => {
-      console.log('Received: ${input}');
-      console.log('type of input : ' + typeof input);
-    });
-    //rl.close();
   });
 };
 

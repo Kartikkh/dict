@@ -163,104 +163,128 @@ let playgame = () => {
   let game_word;
   let game_word_definitions = new Array();
   randomWord((data) => {
-    console.log('Random Word is: ' + data.word);
+    //console.log('Random Word is: ' + data.word);
     game_word = data.word.replace(" ", "%20");
-    console.log('Game Word: ' + game_word);
+    //console.log('Game Word: ' + game_word);
     definitions(game_word, (data) => {
       if(data.length >= 1){
         for(let index in data){
-          game_word_definitions[(parseInt(index)+1)] =  data[index].text;
+          game_word_definitions[index] =  data[index].text;
         }
-        console.log('Length of definition array : ' + game_word_definitions.length);
+        //console.log('Length of definition array : ' + game_word_definitions.length);
       }else{
         console.log('\x1b[31m Error occured in the process.\nProcess will exit now. \x1b[0m');
         process.exit();
       }
-
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-      console.log('Press "Ctrl + C" to exit the program.');
-      console.log('Find the word with the following definition');
-      console.log('Definition :\n\t'+game_word_definitions[1]);
-      console.log('Type the word and press the ENTER key.');
-      rl.on('line', (input) => {
-        if(`${input}` === game_word){
-          console.log('Congratulations! You have entered correct word.');
-          rl.close();
-        }else{
-          if(`${input}` == '3'){
-            rl.close();
-          }
-          if(!(`${input}` == '1' || `${input}` == '2' || `${input}` == '3')){
-            printGameRetryText();
-          }
-          switch(parseInt(`${input}`)){
-            case 1:
-              console.log('Please try to guess the word again:');
-            break;
-            case 2:
-              let randomNumber = Math.floor((Math.random() * parseInt(game_word_definitions.length)) + 1);
-              console.log('Hint:');
-              console.log('\tDefinition :\t' + game_word_definitions[randomNumber]);
-              console.log('\nTry to guess the word again using the hint provided.');
-              console.log('Enter the word:');
-            break;
-            case 3:
-              console.log('The correct word is : ' + game_word);
-              console.log('Thank you for trying out this game. \nGame Ended.');
-              rl.close();
-            break;
-            default:
-          }
+      synonyms(game_word, (data) => {
+        let game_word_synonyms;
+        let hasSynonyms = false;
+        if(data.length >= 1){
+          hasSynonyms = true;
+          game_word_synonyms = data[0].words;
+          //console.log('The Length of synonyms: ' + game_word_synonyms.length);
+          //console.log('synonyms : '+game_word_synonyms);
         }
+        const rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout
+        });
+        console.log('Press "Ctrl + C" to exit the program.');
+        console.log('Find the word with the following definition');
+        console.log('Definition :\n\t'+game_word_definitions[0]);
+        console.log('Type the word and press the ENTER key.');
+        rl.on('line', (input) => {
+          let correctAnswer = false;
+          if(hasSynonyms){
+            for(let index in game_word_synonyms){
+              if(`${input}` == game_word_synonyms[index]){
+                console.log('Congratulations! You have entered correct synonym for the word "'+game_word+'"');
+                rl.close();
+                correctAnswer = true;
+              }
+            }
+          }
+          if(`${input}` === game_word){
+            console.log('Congratulations! You have entered correct word.');
+            rl.close();
+          }else{
+            if(`${input}` == '3'){
+              rl.close();
+            }
+            if(!(`${input}` == '1' || `${input}` == '2' || `${input}` == '3') && !correctAnswer){
+              printGameRetryText();
+            }
+            switch(parseInt(`${input}`)){
+              case 1:
+                console.log('Please try to guess the word again:');
+              break;
+              case 2:
+                let randomNumber = Math.floor((Math.random() * parseInt(game_word_definitions.length)) + 1);
+                //console.log('Random Number : ' + randomNumber);
+                if(randomNumber == game_word_definitions.length){
+                  randomNumber = game_word_definitions.length - 1;
+                }
+                console.log('Hint:');
+                console.log('\tDefinition :\t' + game_word_definitions[randomNumber]);
+                console.log('\nTry to guess the word again using the hint provided.');
+                console.log('Enter the word:');
+              break;
+              case 3:
+                console.log('The correct word is : ' + game_word);
+                console.log('Thank you for trying out this game. \nGame Ended.');
+                rl.close();
+              break;
+              default:
+            }
+          }
+        });
       });
-
     });
   });
 };
 
-if(userargslength == 0){
-  wordOftheDay((data) => {
-    console.log('\x1b[93m Word of the Day - Dictionary: \x1b[0m');
-    dictionary(data.word);
-  });
-}else if(userargslength == 1){
-  let word = userargs[0];
-  switch(word){
-    case 'play':
-      //TODO: word game logic
-      console.log('The current args is : ' + args);
-      playgame();
-      break;
-    default:
-      console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
-      dictionary(word);
-  }
-}else if(userargslength == 2){
-  let word = userargs[1];
-  let url = '';
-  switch(userargs[0]) {
-      case 'def':
-        printDefinitions(word);
-        break;
-      case 'syn':
-        printSynonyms(word);
-        break;
-      case 'ant':
-        printAntonyms(word);
-        break;
-      case 'ex':
-        examples(word);
-        break;
-      case 'dict':
-        console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
-        dictionary(word);
+let startDictionary = () => {
+  if(userargslength == 0){
+    wordOftheDay((data) => {
+      console.log('\x1b[93m Word of the Day - Dictionary: \x1b[0m');
+      dictionary(data.word);
+    });
+  }else if(userargslength == 1){
+    let word = userargs[0];
+    switch(word){
+      case 'play':
+        playgame();
         break;
       default:
-        //TODO: Display help / error message
+        console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
+        dictionary(word);
+    }
+  }else if(userargslength == 2){
+    let word = userargs[1];
+    let url = '';
+    switch(userargs[0]) {
+        case 'def':
+          printDefinitions(word);
+          break;
+        case 'syn':
+          printSynonyms(word);
+          break;
+        case 'ant':
+          printAntonyms(word);
+          break;
+        case 'ex':
+          examples(word);
+          break;
+        case 'dict':
+          console.log('\x1b[93m The dictionary for the word "'+word+'": \x1b[0m');
+          dictionary(word);
+          break;
+        default:
+          //TODO: Display help / error message
+    }
+  }else{
+    //TODO: display help / error message
   }
-}else{
-  //TODO: display help / error message
-}
+};
+
+startDictionary();
